@@ -29,12 +29,14 @@ def predict_premium(data: UserInput):
 
     try:
         prediction = model.predict(input_df)[0]
-       
+        probabilities = model.predict_proba(input_df)[0]
+        class_probabilities = {cls: prob for cls, prob in zip(model.classes_, probabilities)}
 
         return JSONResponse(content={
             "response": {
                 "predicted_category": prediction,
-               
+                "confidence": max(probabilities),
+                "class_probabilities": class_probabilities
             }
         })
 
